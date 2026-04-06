@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        DOCKERHUB_USER = "dhivyathirisha138-sudo"
+        DOCKERHUB_USER = "DHIVYALAKSHMIR"
         IMAGE_NAME = "expense"
         TAG = "v1"
     }
@@ -16,7 +16,7 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                sh "docker build -t $DOCKERHUB_USER/$IMAGE_NAME:$TAG ."
+                bat "docker build -t %DOCKERHUB_USER%/%IMAGE_NAME%:%TAG% ."
             }
         }
 
@@ -24,17 +24,17 @@ pipeline {
             steps {
                 withCredentials([usernamePassword(
                     credentialsId: 'dockerhub-creds',
-                    usernameVariable: 'DHIVYALAKSHMIR',
-                    passwordVariable: 'Lakshmi#123'
+                    usernameVariable: 'USER',
+                    passwordVariable: 'PASS'
                 )]) {
-                    sh 'echo $Lakshmi#123 | docker login -u $DHIVYALAKSHMIR --password-stdin'
+                    bat "echo %PASS% | docker login -u %USER% --password-stdin"
                 }
             }
         }
 
         stage('Push Docker Image') {
             steps {
-                sh "docker push $DOCKERHUB_USER/$IMAGE_NAME:$TAG"
+                bat "docker push %DOCKERHUB_USER%/%IMAGE_NAME%:%TAG%"
             }
         }
     }
