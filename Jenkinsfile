@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        DOCKERHUB_USER = "DHIVYALAKSHMIR"
+        DOCKERHUB_USER = "dhivyalakshmir"
         IMAGE_NAME = "expense"
         TAG = "v1"
     }
