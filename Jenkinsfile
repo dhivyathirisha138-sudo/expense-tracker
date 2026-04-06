@@ -1,0 +1,35 @@
+pipeline {
+    agent any
+
+    environment {
+        DOCKERHUB_USER = "dhivyalakshmir"
+        IMAGE_NAME = "expense"
+        TAG = "v3"
+    }
+
+    stages {
+        stage('Build Docker Image') {
+            steps {
+                bat "docker build -t %DOCKERHUB_USER%/%IMAGE_NAME%:%TAG% ."
+            }
+        }
+
+        stage('Login to DockerHub') {
+            steps {
+                withCredentials([usernamePassword(
+                    credentialsId: 'dockerhub-creds',
+                    usernameVariable: 'USER',
+                    passwordVariable: 'PASS'
+                )]) {
+                    bat "docker login -u %USER% -p %PASS%"
+                }
+            }
+        }
+
+        stage('Push Docker Image') {
+            steps {
+                bat "docker push %DOCKERHUB_USER%/%IMAGE_NAME%:%TAG%"
+            }
+        }
+    }
+}
