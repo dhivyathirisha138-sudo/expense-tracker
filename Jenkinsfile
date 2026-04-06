@@ -19,18 +19,21 @@ pipeline {
                 bat "docker build -t %DOCKERHUB_USER%/%IMAGE_NAME%:%TAG% ."
             }
         }
-
         stage('Login to DockerHub') {
-            steps {
-                withCredentials([usernamePassword(
-                    credentialsId: 'dockerhub-creds',
-                    usernameVariable: 'USER',
-                    passwordVariable: 'PASS'
-                )]) {
-                    bat "echo %PASS% | docker login -u %USER% --password-stdin"
-                }
-            }
+    steps {
+        withCredentials([usernamePassword(
+            credentialsId: 'dockerhub-creds',
+            usernameVariable: 'USER',
+            passwordVariable: 'PASS'
+        )]) {
+            bat '''
+            docker login -u %USER% -p %PASS%
+            '''
         }
+    }
+}
+
+       
 
         stage('Push Docker Image') {
             steps {
